@@ -45,6 +45,7 @@ def get_entry_dict(find):
 
     return entry_dict
 
+
 def parse_meme_tracker_file():
     with open('test.lua', 'r') as file:
         lines = file.readlines()
@@ -73,6 +74,7 @@ def parse_meme_tracker_file():
                 entry_dict = {}
     return entries
 
+
 def add_entry(index, entry):
 
     print("add_entry {} {}".format(index, entry))
@@ -89,9 +91,7 @@ def add_entry(index, entry):
     cell_list[9].value = entry['item_id']
     cell_list[10].value = entry.get('raid_id',"")
     cell_list[11].value = entry['entry_key']
-
     raid_loot_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
-
 
 
 def update_entry(index, entry):
@@ -100,14 +100,12 @@ def update_entry(index, entry):
 
 
 def get_new_entries():
-
     loot_history_entries = util.get_loot_history_entries()
 
     index = len(raid_loot_sheet.col_values(1))
     file_entries = parse_meme_tracker_file()
 
     new_entries = []
-
 
     for entry_key, entry_dict in file_entries.items():
 
@@ -122,19 +120,5 @@ def get_new_entries():
     return new_entries
 
 
-def print_new_entries():
-    new_entries = get_new_entries()
-
-    print(len(new_entries))
-    for entry_dict in new_entries:
-        if not entry_dict.get("item_icon"):
-            entry_dict["item_icon"] = util.get_item_icon(entry_dict["item_id"])
-
-        date = datetime.datetime.strptime(entry_dict["time_stamp"], YMD_TIMESTAMP_FORMAT)
-        entry_dict["time_stamp"] = date.strftime(MDY_TIMESTAMP_FORMAT)
-        entry_dict["date"] = date.strftime(MDY_DATE_FORMAT)
-        print(RECORD_FORMAT.format(**entry_dict))
-
-
 if __name__ == "__main__":
-    print_new_entries()
+    get_new_entries()
