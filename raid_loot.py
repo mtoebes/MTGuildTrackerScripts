@@ -46,7 +46,7 @@ class LegacyRaidLoot:
             THUMBNAIL_FUNCTION_ITEM_FORMAT.format(item_dict['item_icon']),
             HYPERLINK_FUNCTION_ITEM_FORMAT.format(item_dict['item_id'], item_dict['item_name']),
             item_dict['item_quality'],
-            HYPERLINK_FUNCTION_REALM_PLAYER_FORMAT.format(item_dict['player_name'], item_dict['player_name']),
+            item_dict['player_name'],
             item_dict['player_class'],
             item_dict['item_id'],
             "{}_{}".format(item_dict['item_date'].time(), item_dict['item_id'] )

@@ -48,6 +48,7 @@ CLASS_COLORS = {
 MDY_TIMESTAMP_FORMAT = "%m/%d/%Y %H:%M:%S"
 
 MDY_TIMESTAMP_ALT_FORMAT = '%m/%d/%Y %I:%M %p'
+MDY_TIMESTAMP_ALT2_FORMAT = '%m/%d/%Y %I:%M:%S %p'
 
 YMD_TIMESTAMP_FORMAT = "%y-%m-%d %H:%M:%S"
 YMD_DATE_FORMAT = "%y-%m-%d"

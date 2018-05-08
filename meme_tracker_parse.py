@@ -81,7 +81,7 @@ def add_entry(index, entry):
     cell_list = raid_loot_sheet.range(index+2, 1, index+2, 12)
     cell_list[0].value = entry['date']
     cell_list[1].value = entry['raid_name']
-    cell_list[2].value = HYPERLINK_FUNCTION_REALM_PLAYER_FORMAT.format(entry['player_name'],entry['player_name'])
+    cell_list[2].value = entry['player_name']
     cell_list[3].value = entry['player_class']
     cell_list[4].value = THUMBNAIL_FUNCTION_ITEM_FORMAT.format( util.get_item_icon(entry["item_id"]))
     cell_list[5].value = HYPERLINK_FUNCTION_ITEM_FORMAT.format(entry['item_id'], entry['item_name'])
@@ -114,6 +114,7 @@ def get_new_entries():
         if loot_history_entry:
             update_entry(loot_history_entry['index'], entry_dict)
         else:
+            print(index)
             add_entry(index, entry_dict)
             index += 1
 

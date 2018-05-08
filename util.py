@@ -10,13 +10,17 @@ def get_legacy_raid_ids():
     with urllib.request.urlopen(HYPERLINK_FUNCTION_LEGACY_PLAYER_RAIDS) as response:
         page = response.read()
     soup = BeautifulSoup(page, 'html.parser')
-    character_table_list = soup.find('table', attrs={'class':'table noborder bbdesign'}).contents[1].contents
+    character_table_list = soup.find('table', attrs={'class':'table noborder bbdesign'}).contents[3].contents[1:-1]
 
     raid_ids = []
-    for element in character_table_list:
-        raid_id = element.contents[0].contents[0]
-        if raid_id:
-            raid_ids.append(raid_id)
+    for item in character_table_list:
+        try:
+            raid_id = item.contents[0].contents[0]
+            raid_date = datetime.datetime.strptime(item.contents[3].contents[0], MDY_TIMESTAMP_ALT2_FORMAT)
+            if raid_id:
+                raid_ids.append(raid_id)
+        except:
+            continue
     return raid_ids
 
 

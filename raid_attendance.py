@@ -33,18 +33,20 @@ class LegacyRaidAttendence():
         with urllib.request.urlopen(self.raid_url) as response:
             page = response.read()
         soup = BeautifulSoup(page, 'html.parser')
-        overview = soup.find('div', attrs={'id':'info'}).contents[0]
+        overview = soup.find('div', attrs={'id':'info'}).contents[1]
 
-        participant_list = soup.find('table', attrs={'id': 'rs_participants'}).contents[1].contents[0:8]
+        participant_list = soup.find('table', attrs={'id': 'rs_participants'}).contents[3].contents[1:9]
 
         self.players = set()
         for index, class_list in enumerate(participant_list):
             player_class = PLAYER_CLASSES[index]
-            class_list = class_list.contents[0].contents
-            for player in [class_list[i] for i in range(len(class_list)) if i % 2 == 1]:
-                player_name = player.next
-                self.players.add((player_name, player_class))
-
+            try:
+                class_list = class_list.contents[0].contents
+                for player in [class_list[i] for i in range(len(class_list)) if i % 2 == 1]:
+                    player_name = player.next
+                    self.players.add((player_name, player_class))
+            except:
+                continue
         self.raid_name = overview.contents[0].strip()
 
         self.raid_name_short = RAID_NAME_SHORT.get(self.raid_name, self.raid_name)
@@ -57,7 +59,7 @@ def get_next_column_index():
     dates = [date for date in header_row if date !=''][COLUMN_OFFSET:]
     date_count = len(dates)
 
-    column = COLUMN_OFFSET + 2*date_count + 1
+    column = COLUMN_OFFSET + date_count + 1
     return column
 
 def get_attendance_player_row(player_name):
@@ -71,7 +73,7 @@ def add_new_player(player_index, player_name, player_class):
     attendance_players.append(player_name)
 
     cell_list = raid_attendance_sheet.range(row, 1, row, 6)
-    cell_list[0].value = HYPERLINK_FUNCTION_REALM_PLAYER_FORMAT.format(player_name, player_name)
+    cell_list[0].value = player_name
     cell_list[1].value = player_class
     cell_list[2].value = OVERALL_FORMULA.format(row=row, max_column=MAX_COLUMN)
     cell_list[3].value = LAST_4_WEEKS_FORMULA.format(row=row, max_column=MAX_COLUMN)
@@ -116,20 +118,6 @@ def add_raid_attendance(raid_column, raid_attendance):
 
     raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
-    cell_list = raid_attendance_sheet.range(1, raid_column + 1, len(attendance_players) + ROW_OFFSET, raid_column + 1)
-
-    for index, val in enumerate(cell_list):
-        if index >= ROW_OFFSET:
-            row_dict = {
-                'row':index+1,
-                'rel_mc':-index+2,
-                'rel_bwl':-index+4,
-                'rel_aq':-index+6
-            }
-            cell_list[index].value = LOOT_COUNT_FORMULA.format(**row_dict)
-        else:
-            cell_list[index].value = ''
-    raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
 def is_official_raid(raid_attendance):
     date = datetime.datetime.strptime(raid_attendance.raid_date, MDY_TIMESTAMP_FORMAT)
@@ -153,9 +141,28 @@ def add_all_raids():
     for raid_id in util.get_legacy_raid_ids():
         add_raid_id(raid_id)
 
+
+def get_raids_for_date(date):
+    raid_attendance_list = []
+    print(date)
+    for raid_id in util.get_legacy_raid_ids():
+        raid_attendance = LegacyRaidAttendence(raid_id)
+        raid_date =- raid_attendance.raid_date
+        if raid_date == date:
+            raid_attendance_list.append(raid_attendance)
+        elif raid_date < date:
+            break
+    return raid_attendance_list
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
-            add_raid_id(arg)
+            print("test")
+            print(arg)
+            date = datetime.datetime.strptime(arg, YMD_DATE_FORMAT)
+            raid_attendance_list = get_raids_for_date(date)
+
+            for raid in raid_attendance_list:
+                add_raid_id(raid)
     else:
         add_all_raids()
