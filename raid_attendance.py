@@ -147,7 +147,7 @@ def get_raids_for_date(date):
     print(date)
     for raid_id in util.get_legacy_raid_ids():
         raid_attendance = LegacyRaidAttendence(raid_id)
-        raid_date =- raid_attendance.raid_date
+        raid_date = raid_attendance.raid_date
         if raid_date == date:
             raid_attendance_list.append(raid_attendance)
         elif raid_date < date:
