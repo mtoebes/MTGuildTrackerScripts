@@ -111,7 +111,7 @@ def build_row(item):
 
 
 def set_header():
-    cell_list = guild_bank_sheet.range('A1:E1')
+    cell_list = guild_bank_sheet.range('A2:E2')
     cell_values = ["Count", "Icon", "Name", "Rarity", "Type"]
 
     for i, val in enumerate(cell_values):
@@ -122,14 +122,14 @@ def set_header():
 
 def set_date_header():
     date_string = today.strftime(MDY_TIMESTAMP_FORMAT)
-    guild_bank_sheet.update_acell('G1', 'Last Updated = {}'.format(date_string))
+    guild_bank_sheet.update_acell('C1', 'Last Updated = {}'.format(date_string))
 
 
 def update_rows(list):
     build_rows = [build_row(item) for item in list]
     flat_list = [item for sublist in build_rows for item in sublist]
 
-    range_string = 'A2:E{}'.format(len(build_rows)+1)
+    range_string = 'A3:E{}'.format(len(build_rows)+2)
     cell_list = guild_bank_sheet.range(range_string)
 
     for i, val in enumerate(flat_list):
