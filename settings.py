@@ -30,7 +30,8 @@ RAID_NAME_SHORT = {
     'Zul\'Gurub':'ZG',
     'Onyxia\'s Lair':'ONY',
     "Ahn'Qiraj":'AQ40',
-    "Ruins of Ahn'Qiraj":"AQ20"
+    "Ruins of Ahn'Qiraj":"AQ20",
+    "Naxxramas":"Naxx",
 }
 
 CLASS_COLORS = {

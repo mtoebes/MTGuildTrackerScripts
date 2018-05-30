@@ -65,7 +65,7 @@ def chunks(l, n):
         yield l[i:i + n]
 
 
-def get_loot_history_entries():
+def get_loot_history_entries(include_unofficial=False):
     loot_sheet_values = raid_loot_sheet.get_all_values()
 
     cell_list = raid_loot_sheet.range(2, 1, len(loot_sheet_values), 12)
@@ -79,7 +79,7 @@ def get_loot_history_entries():
         raid_date = datetime.datetime.strptime(chunk[7].value, YMD_TIMESTAMP_FORMAT)
         raid_name = chunk[1].value
 
-        if is_official_raid(raid_date, raid_name):
+        if is_official_raid(raid_date, raid_name) or include_unofficial:
             if entries.get(chunk[11].value):
                 print("DUP {}".format(chunk))
             entries[chunk[11].value] = {

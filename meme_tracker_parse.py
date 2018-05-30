@@ -10,7 +10,7 @@ MEME_TRACKER_DB_END_PATTERN = """}"""
 
 RECORD_FORMAT = '{date}\t\t{raid_name}\t{time_stamp}\t=IMAGE("http://vanillawowdb.com/images/icons/large/{item_icon}.png")\t=HYPERLINK("http://vanillawowdb.com/?item={item_id}","{item_name}")\t{item_quality}\t=HYPERLINK("http://realmplayers.com/CharacterViewer.aspx?realm=Ely&player={player_name}","{player_name}")\t{player_class}\t{item_id}\t{entry_key}'
 
-recorded_items = util.get_loot_history_entries()
+recorded_items = util.get_loot_history_entries(True)
 
 
 def get_last_index():
@@ -101,7 +101,7 @@ def update_entry(index, entry):
 
 
 def get_new_entries():
-    loot_history_entries = util.get_loot_history_entries()
+    loot_history_entries = util.get_loot_history_entries(True)
 
     index = len(raid_loot_sheet.col_values(1))
     file_entries = parse_meme_tracker_file()
@@ -121,6 +121,28 @@ def get_new_entries():
 
     return new_entries
 
+def temp():
+    loot_history_entries = util.get_loot_history_entries(True)
+
+    index = len(raid_loot_sheet.col_values(1))
+    file_entries = parse_meme_tracker_file()
+
+    new_entries = []
+
+    for entry_key, entry_dict in file_entries.items():
+
+        if (entry_key != '1526006989_19388'):
+            continue
+
+        templist = []
+
+        for key, item in loot_history_entries.items():
+            if item['item_id'] == '19388':
+                templist.append(item)
+            elif item['item_name'] == "Angelista's Grasp":
+                templist.append(item)
+
+        print("")
 
 if __name__ == "__main__":
     get_new_entries()

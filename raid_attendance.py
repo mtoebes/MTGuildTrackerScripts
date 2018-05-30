@@ -27,9 +27,14 @@ attendance_raid_ids = util.get_recorded_attendance_raid_ids()
 
 class LegacyRaidAttendence():
 
-    def __init__(self, raid_id):
+    def __init__(self, raid_id=None,url=None):
         self.raid_id = raid_id
-        self.raid_url = RAID_URL_FORMAT.format(raid_id)
+
+        if url:
+            self.raid_url = url
+        else:
+            self.raid_url = RAID_URL_FORMAT.format(raid_id)
+
         with urllib.request.urlopen(self.raid_url) as response:
             page = response.read()
         soup = BeautifulSoup(page, 'html.parser')
@@ -109,7 +114,7 @@ def add_raid_attendance(raid_column, raid_attendance):
     cell_list[raid_offset+1].value = raid_attendance.raid_id
 
     for index, val in enumerate(cell_list):
-        if index > ROW_OFFSET:
+        if index >= ROW_OFFSET:
             player_index = index - ROW_OFFSET
             if player_index in mark_row_list:
                 cell_list[index].value = '1'
@@ -124,18 +129,21 @@ def is_official_raid(raid_attendance):
 
     return util.is_official_raid(date, raid_attendance.raid_name) and raid_attendance.raid_name_short not in IGNORE_RAID_NAMES and raid_attendance.raid_id not in IGNORE_RAID_IDS
 
-def add_raid_id(raid_id):
-    column = get_next_column_index()
-    if raid_id not in attendance_raid_ids:
-        raid_attendance = LegacyRaidAttendence(raid_id)
-
-        if is_official_raid(raid_attendance):
-            print("adding {}".format(raid_id))
-            add_raid_attendance(column, raid_attendance)
-        else:
-            print("skipping {}, not an official raid".format(raid_id))
+def add_raid(raid_attendance, override=False):
+    if raid_attendance.raid_id not in attendance_raid_ids or override:
+        column = get_next_column_index()
+        add_raid_attendance(column, raid_attendance)
     else:
-        print("skipping {}, already recorded".format(raid_id))
+        print("skipping {}, already recorded".format(raid_attendance.raid_id))
+
+def add_raid_id(raid_id):
+    raid_attendance = LegacyRaidAttendence(raid_id)
+
+    if is_official_raid(raid_attendance):
+        print("adding {}".format(raid_id))
+        add_raid(raid_attendance)
+    else:
+        print("skipping {}, not an official raid".format(raid_id))
 
 def add_all_raids():
     for raid_id in util.get_legacy_raid_ids():
@@ -147,12 +155,16 @@ def get_raids_for_date(date):
     print(date)
     for raid_id in util.get_legacy_raid_ids():
         raid_attendance = LegacyRaidAttendence(raid_id)
-        raid_date = raid_attendance.raid_date
-        if raid_date == date:
+        raid_date = datetime.datetime.strptime(raid_attendance.raid_date, MDY_TIMESTAMP_FORMAT)
+        if  raid_date.date() == date.date():
             raid_attendance_list.append(raid_attendance)
         elif raid_date < date:
             break
     return raid_attendance_list
+
+def temp(raid_id, url):
+    raid_attendance = LegacyRaidAttendence(raid_id,url)
+    add_raid(raid_attendance, True)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -163,6 +175,6 @@ if __name__ == "__main__":
             raid_attendance_list = get_raids_for_date(date)
 
             for raid in raid_attendance_list:
-                add_raid_id(raid)
+                add_raid(raid)
     else:
         add_all_raids()
