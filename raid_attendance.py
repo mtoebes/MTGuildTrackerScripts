@@ -25,6 +25,7 @@ LOOT_COUNT_FORMULA = '''=IF($A{row} <> "", SUM(ArrayFormula(IF('Raid Loot'!$H$2:
 attendance_players = util.get_recorded_attendance_players()
 attendance_raid_ids = util.get_recorded_attendance_raid_ids()
 
+
 class LegacyRaidAttendence():
 
     def __init__(self, raid_id=None,url=None):
@@ -58,6 +59,7 @@ class LegacyRaidAttendence():
         self.raid_date = re.match(RAID_DATE_REGEX, overview.contents[1].contents[0]).group('date')
         self.raid_date = datetime.datetime.strptime(self.raid_date, MDY_TIMESTAMP_ALT_FORMAT).strftime(MDY_TIMESTAMP_FORMAT)
 
+
 def get_next_column_index():
     header_row = raid_attendance_sheet.row_values(1)
 
@@ -67,11 +69,13 @@ def get_next_column_index():
     column = COLUMN_OFFSET + date_count + 1
     return column
 
+
 def get_attendance_player_row(player_name):
     for idx, player in enumerate(attendance_players):
         if player == player_name:
             return idx
     return None
+
 
 def add_new_player(player_index, player_name, player_class):
     row = player_index + ROW_OFFSET + 1
@@ -129,12 +133,14 @@ def is_official_raid(raid_attendance):
 
     return util.is_official_raid(date, raid_attendance.raid_name) and raid_attendance.raid_name_short not in IGNORE_RAID_NAMES and raid_attendance.raid_id not in IGNORE_RAID_IDS
 
+
 def add_raid(raid_attendance, override=False):
     if raid_attendance.raid_id not in attendance_raid_ids or override:
         column = get_next_column_index()
         add_raid_attendance(column, raid_attendance)
     else:
         print("skipping {}, already recorded".format(raid_attendance.raid_id))
+
 
 def add_raid_id(raid_id):
     raid_attendance = LegacyRaidAttendence(raid_id)
@@ -145,6 +151,7 @@ def add_raid_id(raid_id):
     else:
         print("skipping {}, not an official raid".format(raid_id))
 
+
 def add_all_raids():
     for raid_id in util.get_legacy_raid_ids():
         add_raid_id(raid_id)
@@ -152,7 +159,6 @@ def add_all_raids():
 
 def get_raids_for_date(date):
     raid_attendance_list = []
-    print(date)
     for raid_id in util.get_legacy_raid_ids():
         raid_attendance = LegacyRaidAttendence(raid_id)
         raid_date = datetime.datetime.strptime(raid_attendance.raid_date, MDY_TIMESTAMP_FORMAT)
@@ -162,19 +168,45 @@ def get_raids_for_date(date):
             break
     return raid_attendance_list
 
-def temp(raid_id, url):
+def get_raids_after_date(date):
+    raid_attendance_list = []
+    for raid_id in util.get_legacy_raid_ids():
+        raid_attendance = LegacyRaidAttendence(raid_id)
+        raid_date = datetime.datetime.strptime(raid_attendance.raid_date, MDY_TIMESTAMP_FORMAT)
+        if raid_date.date() >= date.date():
+            raid_attendance_list.append(raid_attendance)
+        elif raid_date < date:
+            break
+    return raid_attendance_list
+
+
+def add_raids_after_date(date):
+    raid_attendance_list = get_raids_after_date(date)
+    for raid in raid_attendance_list:
+        add_raid(raid)
+
+
+def add_raids_on_date(date):
+    raid_attendance_list = get_raids_for_date(date)
+    for raid in raid_attendance_list:
+        add_raid(raid)
+
+
+def add_raid_by_url(raid_id, url):
     raid_attendance = LegacyRaidAttendence(raid_id,url)
     add_raid(raid_attendance, True)
+
+
+def add_new_raids():
+    raid_dates = util.get_recorded_attendace_dates()
+    last_raid_date = raid_dates[-1]
+    add_raids_after_date(last_raid_date)
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
-            print("test")
-            print(arg)
             date = datetime.datetime.strptime(arg, YMD_DATE_FORMAT)
-            raid_attendance_list = get_raids_for_date(date)
-
-            for raid in raid_attendance_list:
-                add_raid(raid)
+            add_raids_on_date(date)
     else:
-        add_all_raids()
+        add_new_raids()

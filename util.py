@@ -47,6 +47,10 @@ def get_item_icon(item_id):
     item_icon = re.match(CLASSIC_DB_ICON_NAME_REGEX, temp).groups()[0]
     return item_icon
 
+def get_recorded_attendace_dates():
+    return [datetime.datetime.strptime(date, YMD_TIMESTAMP_FORMAT) if date != '' else '' for date in raid_attendance_sheet.row_values(1)[5:]]
+
+
 def get_recorded_loot_dates():
     return [datetime.datetime.strptime(date, MDY_TIMESTAMP_FORMAT) if date != '' else '' for date in raid_loot_sheet.col_values(4)[1:]]
 
