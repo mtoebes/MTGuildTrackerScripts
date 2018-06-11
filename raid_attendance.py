@@ -10,7 +10,7 @@ import sys
 RAID_DATE_REGEX = '\((?P<date>.+)\)'
 
 COLUMN_OFFSET = 5
-ROW_OFFSET = 7
+ROW_OFFSET = 10
 
 IGNORE_RAID_IDS = ['11327', '11335', '11328', '11316']
 IGNORE_RAID_NAMES = ['ZG', 'AQ20', 'ONY']
@@ -108,11 +108,13 @@ def add_raid_attendance(raid_column, raid_attendance):
     cell_list[0].value = raid_attendance.raid_date
 
     if raid_attendance.raid_name_short == "AQ40":
-        raid_offset = 5
+        raid_offset = 6
     elif raid_attendance.raid_name_short == "BWL":
-        raid_offset = 3
+        raid_offset = 4
+    elif raid_attendance.raid_name_short == "Naxx":
+        raid_offset = 8
     else:
-        raid_offset = 1
+        raid_offset = 2
 
     cell_list[raid_offset].value = HYPERLINK_FUNCTION_FORMAT.format(raid_attendance.raid_url, raid_attendance.raid_name_short)
     cell_list[raid_offset+1].value = raid_attendance.raid_id

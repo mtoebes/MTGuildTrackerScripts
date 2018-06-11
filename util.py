@@ -16,7 +16,6 @@ def get_legacy_raid_ids():
     for item in character_table_list:
         try:
             raid_id = item.contents[0].contents[0]
-            raid_date = datetime.datetime.strptime(item.contents[3].contents[0], MDY_TIMESTAMP_ALT2_FORMAT)
             if raid_id:
                 raid_ids.append(raid_id)
         except:
@@ -30,13 +29,14 @@ def get_recorded_loot_raid_ids():
 
 def get_recorded_attendance_raid_ids():
     attendance_raid_ids = []
-    attendance_raid_ids.extend([raid_id.strip() for raid_id in raid_attendance_sheet.row_values(3) if raid_id != ''])
-    attendance_raid_ids.extend([raid_id.strip() for raid_id in raid_attendance_sheet.row_values(5) if raid_id != ''])
-    attendance_raid_ids.extend([raid_id.strip() for raid_id in raid_attendance_sheet.row_values(7) if raid_id != ''])
+    attendance_raid_ids.extend([raid_id.strip() for raid_id in raid_attendance_sheet.row_values(4) if raid_id != ''])
+    attendance_raid_ids.extend([raid_id.strip() for raid_id in raid_attendance_sheet.row_values(6) if raid_id != ''])
+    attendance_raid_ids.extend([raid_id.strip() for raid_id in raid_attendance_sheet.row_values(8) if raid_id != ''])
+    attendance_raid_ids.extend([raid_id.strip() for raid_id in raid_attendance_sheet.row_values(10) if raid_id != ''])
     return set(attendance_raid_ids)
 
 def get_recorded_attendance_players():
-    return [player_name for player_name in raid_attendance_sheet.col_values(1)[7:] if player_name != '' ]
+    return [player_name for player_name in raid_attendance_sheet.col_values(1)[10:] if player_name != '' ]
 
 def get_item_icon(item_id):
     item_db_link = CLASSIC_DB_URL_FORMAT.format(item_id)
@@ -48,7 +48,7 @@ def get_item_icon(item_id):
     return item_icon
 
 def get_recorded_attendace_dates():
-    return [datetime.datetime.strptime(date, YMD_TIMESTAMP_FORMAT) if date != '' else '' for date in raid_attendance_sheet.row_values(1)[5:]]
+    return [datetime.datetime.strptime(date, YMD_TIMESTAMP_FORMAT) if date != '' else '' for date in raid_attendance_sheet.row_values(2)[5:]]
 
 
 def get_recorded_loot_dates():
