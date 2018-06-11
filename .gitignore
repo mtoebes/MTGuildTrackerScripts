@@ -113,3 +113,5 @@ archive/RealmPlayerInfo.py
 AuctionHouse.py
 test.lua
 .idea/vcs.xml
+lua/build_backup.lua
+lua/parse_backup.lua

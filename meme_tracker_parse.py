@@ -10,9 +10,6 @@ MEME_TRACKER_DB_END_PATTERN = """}"""
 
 RECORD_FORMAT = '{date}\t\t{raid_name}\t{time_stamp}\t=IMAGE("http://vanillawowdb.com/images/icons/large/{item_icon}.png")\t=HYPERLINK("http://vanillawowdb.com/?item={item_id}","{item_name}")\t{item_quality}\t=HYPERLINK("http://realmplayers.com/CharacterViewer.aspx?realm=Ely&player={player_name}","{player_name}")\t{player_class}\t{item_id}\t{entry_key}'
 
-#recorded_items = util.get_loot_history_entries(True)
-
-
 def get_last_index():
     return len([raid_id for raid_id in raid_loot_sheet.col_values(2) if raid_id != ''][1:])
 
@@ -30,8 +27,12 @@ def get_entry_dict(find):
 
 
 def parse_meme_tracker_file():
-    with open('test.lua', 'r') as file:
+
+    with open(MEME_TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
         lines = file.readlines()
+
+    with open('lua/parse_backup.lua','w') as backup_file:
+        backup_file.writelines(lines)
 
     found_start = False
     found_end = False
@@ -99,33 +100,15 @@ def get_new_entries():
             update_entry(loot_history_entry['index'], entry_dict)
         else:
             print(index)
-            add_entry(index, entry_dict)
+            add_entry(index, entry_dict, True)
             index += 1
 
     return new_entries
 
-def temp():
-    loot_history_entries = util.get_loot_history_entries(True)
 
-    index = len(raid_loot_sheet.col_values(1))
-    file_entries = parse_meme_tracker_file()
+def run():
+    get_new_entries()
 
-    new_entries = []
-
-    for entry_key, entry_dict in file_entries.items():
-
-        if (entry_key != '1526006989_19388'):
-            continue
-
-        templist = []
-
-        for key, item in loot_history_entries.items():
-            if item['item_id'] == '19388':
-                templist.append(item)
-            elif item['item_name'] == "Angelista's Grasp":
-                templist.append(item)
-
-        print("")
 
 if __name__ == "__main__":
-    get_new_entries()
+    run()

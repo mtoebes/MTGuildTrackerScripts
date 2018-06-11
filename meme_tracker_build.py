@@ -45,6 +45,12 @@ def to_attendance_lua_entry(entry):
 
 def save_entries(loot_entries, attendance_entries):
 
+    with open(MEME_TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
+        lines = file.readlines()
+
+    with open('lua/build_backup.lua','w') as backup_file:
+        backup_file.writelines(lines)
+
     with open('test.lua', 'w') as file:
         file.write("\nMemeTrackerDB = {")
         for key, entry in loot_entries.items():
@@ -116,8 +122,11 @@ def get_attendance_entries():
     return entries
 
 
-if __name__ == "__main__":
+def run():
     loot_entries = util.get_loot_history_entries(True)
     attendance_entries = get_attendance_entries()
     save_entries(loot_entries, attendance_entries)
 
+
+if __name__ == "__main__":
+    run()
