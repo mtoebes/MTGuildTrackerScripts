@@ -10,28 +10,11 @@ MEME_TRACKER_DB_END_PATTERN = """}"""
 
 RECORD_FORMAT = '{date}\t\t{raid_name}\t{time_stamp}\t=IMAGE("http://vanillawowdb.com/images/icons/large/{item_icon}.png")\t=HYPERLINK("http://vanillawowdb.com/?item={item_id}","{item_name}")\t{item_quality}\t=HYPERLINK("http://realmplayers.com/CharacterViewer.aspx?realm=Ely&player={player_name}","{player_name}")\t{player_class}\t{item_id}\t{entry_key}'
 
-recorded_items = util.get_loot_history_entries(True)
+#recorded_items = util.get_loot_history_entries(True)
 
 
 def get_last_index():
     return len([raid_id for raid_id in raid_loot_sheet.col_values(2) if raid_id != ''][1:])
-
-
-def get_record_item_match(item_dict):
-    for item in recorded_items:
-        item_datetime = datetime.datetime.strptime(item_dict["time_stamp"], YMD_TIMESTAMP_FORMAT)
-        entry_key = item_dict.get("entry_key")
-        if not entry_key:
-            entry_key = "{}_{}".format(int(item_datetime.timestamp()), item_dict["item_id"])
-            item_dict["entry_key"] = entry_key
-        if item['entry_key'] == entry_key:
-            return item
-
-        if (item['date'] - item_datetime).days == 0 and item_dict['item_id'] == item["item_id"] and item_dict["player_name"] == item["player_name"]:
-            return item
-
-    return None
-
 
 def get_entry_dict(find):
     find_iter = re.finditer(LOOT_HISTORY_FIELD_PATTERN, find[1])
