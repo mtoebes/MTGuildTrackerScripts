@@ -51,7 +51,7 @@ def save_entries(loot_entries, attendance_entries):
     with open('lua/build_backup.lua','w') as backup_file:
         backup_file.writelines(lines)
 
-    with open('test.lua', 'w') as file:
+    with open(MEME_TRACKER_SAVED_VARIABLES_FILE_PATH, 'w') as file:
         file.write("\nMemeTrackerDB = {")
         for key, entry in loot_entries.items():
             file.write(to_loot_lua_entry(entry))

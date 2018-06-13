@@ -100,7 +100,7 @@ def get_new_entries():
             update_entry(loot_history_entry['index'], entry_dict)
         else:
             print(index)
-            add_entry(index, entry_dict, True)
+            add_entry(index, entry_dict)
             index += 1
 
     return new_entries
