@@ -198,8 +198,9 @@ def add_all_raids(override=False):
 
 def add_recent_raids():
     raid_dates = util.get_recorded_attendace_dates()
-    last_raid_date = raid_dates[-1]
-    add_raids_after_date(last_raid_date)
+    if len(raid_dates) > 0:
+        last_raid_date = raid_dates[-1]
+        add_raids_after_date(last_raid_date)
 
 
 def parse_date_string(date_str):

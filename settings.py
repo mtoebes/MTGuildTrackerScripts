@@ -76,7 +76,6 @@ RAID_URL_REGEX = 'https://legacyplayers.com/Raids/Viewer/\?id=(\d+).*'
 
 THUMBNAIL_FUNCTION_ITEM_FORMAT = '=IMAGE("http://vanillawowdb.com/images/icons/large/{}.png")'
 HYPERLINK_FUNCTION_ITEM_FORMAT = '=HYPERLINK("http://vanillawowdb.com/?item={}","{}")'
-HYPERLINK_FUNCTION_REALM_PLAYER_FORMAT = '=HYPERLINK("http://realmplayers.com/CharacterViewer.aspx?realm=Ely&player={}","{}")'
 
 HYPERLINK_FUNCTION_LEGACY_PLAYER_RAIDS = 'https://legacyplayers.com/Raids/?name={}&exp=0'.format(quote(GUILD_NAME))
 
