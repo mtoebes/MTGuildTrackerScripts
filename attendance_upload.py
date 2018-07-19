@@ -16,13 +16,6 @@ ROW_OFFSET = 10
 IGNORE_RAID_IDS = ['11327', '11335', '11328', '11316']
 IGNORE_RAID_NAMES = []
 
-MAX_COLUMN = 'CD'
-OVERALL_FORMULA = '''=IF($A{row} <> "", SUM(ARRAYFORMULA(if(Y$1:{max_column}$1<>"",Y{row}:{max_column}{row},0)))/$C$2, "")'''
-LAST_4_WEEKS_FORMULA ='''=SUM(ARRAYFORMULA(if($Y$1:${max_column}$1>=TODAY()-7*$D$2,$Y{row}:${max_column}{row},0)))/SUM(ARRAYFORMULA(if($Y$1:${max_column}$1>=TODAY()-7*$D$2,1,0)))'''
-LAST_2_WEEKS_FORMULA='''=SUM(ARRAYFORMULA(if($Y$1:${max_column}$1>=TODAY()-7*$E$2,$Y{row}:${max_column}{row},0)))/SUM(ARRAYFORMULA(if($Y$1:${max_column}$1>=TODAY()-7*$E$2,1,0)))'''
-LAST_5_FORMULA='''=IF($A{row} <> "", SUM(ARRAYFORMULA(IF(COLUMN(Y{row}:{max_column}{row})>=2*(COUNT(Y$1:{max_column}$1)-$F$2)+COLUMN($Y$1), IF(Y$1:{max_column}$1 <> "", Y{row}:{max_column}{row}, 0),0)))/$F$2, "")'''
-LOOT_COUNT_FORMULA = '''=IF($A{row} <> "", SUM(ArrayFormula(IF('Raid Loot'!$H$2:$H=$A{row},IF('Raid Loot'!$B$2:$B=INDIRECT("R[{rel_mc}]C[-1]", false), 1,IF('Raid Loot'!$B$2:$B=INDIRECT("R[{rel_bwl}]C[-1]", false), 1,IF('Raid Loot'!$B$2:$B=INDIRECT("R[{rel_aq}]C[-1]", false), 1,0))), 0))), "")'''
-
 attendance_players = util.get_recorded_attendance_players()
 attendance_raid_ids = util.get_recorded_attendance_raid_ids()
 
@@ -87,12 +80,9 @@ def add_new_player(player_index, player_name, player_class):
     row = player_index + ROW_OFFSET + 1
     attendance_players.append(player_name)
 
-    cell_list = raid_attendance_sheet.range(row, 1, row, 6)
+    cell_list = raid_attendance_sheet.range(row, 1, row, 2)
     cell_list[0].value = player_name
     cell_list[1].value = player_class
-    cell_list[2].value = OVERALL_FORMULA.format(row=row, max_column=MAX_COLUMN)
-    cell_list[3].value = LAST_4_WEEKS_FORMULA.format(row=row, max_column=MAX_COLUMN)
-    cell_list[4].value = LAST_2_WEEKS_FORMULA.format(row=row, max_column=MAX_COLUMN)
 
     raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
