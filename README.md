@@ -33,7 +33,6 @@ this readme is WIP
 1. Optional: Download and install [PyCharm](https://www.jetbrains.com/pycharm/download). 
     * Once Pycharm is downloaded, open it and go to "file"->"open" and choose the folder you downloaded in the previous step 
 1. Using your native terminal or the terminal in PyCharm, cd to the folder where you downloaded the project
-and this command
     * run `pip install -r requirements.txt`
     * Python gurus: install to a new virtual environment
 
