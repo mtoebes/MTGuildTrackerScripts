@@ -6,6 +6,7 @@ import re
 from settings import *
 import util
 import sys
+import argparse
 
 RAID_DATE_REGEX = '\((?P<date>.+)\)'
 
@@ -13,7 +14,7 @@ COLUMN_OFFSET = 5
 ROW_OFFSET = 10
 
 IGNORE_RAID_IDS = ['11327', '11335', '11328', '11316']
-IGNORE_RAID_NAMES = ['ZG', 'AQ20', 'ONY']
+IGNORE_RAID_NAMES = []
 
 MAX_COLUMN = 'CD'
 OVERALL_FORMULA = '''=IF($A{row} <> "", SUM(ARRAYFORMULA(if(Y$1:{max_column}$1<>"",Y{row}:{max_column}{row},0)))/$C$2, "")'''
@@ -33,6 +34,7 @@ class LegacyRaidAttendence():
 
         if url:
             self.raid_url = url
+            self.raid_id = re.match(RAID_URL_REGEX, url).groups()[0]
         else:
             self.raid_url = RAID_URL_FORMAT.format(raid_id)
 
@@ -58,6 +60,10 @@ class LegacyRaidAttendence():
         self.raid_name_short = RAID_NAME_SHORT.get(self.raid_name, self.raid_name)
         self.raid_date = re.match(RAID_DATE_REGEX, overview.contents[1].contents[0]).group('date')
         self.raid_date = datetime.datetime.strptime(self.raid_date, MDY_TIMESTAMP_ALT_FORMAT).strftime(MDY_TIMESTAMP_FORMAT)
+
+    def __str__(self):
+        date = datetime.datetime.strptime(self.raid_date, MDY_TIMESTAMP_FORMAT).strftime(YMD_DATE_FORMAT)
+        return "{short_name} {date} {id}".format(id=self.raid_id, short_name=self.raid_name_short, date=date)
 
 
 def get_next_column_index():
@@ -89,6 +95,7 @@ def add_new_player(player_index, player_name, player_class):
     cell_list[4].value = LAST_2_WEEKS_FORMULA.format(row=row, max_column=MAX_COLUMN)
 
     raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
+
 
 def add_raid_attendance(raid_column, raid_attendance):
     mark_row_list = []
@@ -130,47 +137,47 @@ def add_raid_attendance(raid_column, raid_attendance):
     raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
 
-def is_official_raid(raid_attendance):
-    date = datetime.datetime.strptime(raid_attendance.raid_date, MDY_TIMESTAMP_FORMAT)
-
-    return util.is_official_raid(date, raid_attendance.raid_name) and raid_attendance.raid_name_short not in IGNORE_RAID_NAMES and raid_attendance.raid_id not in IGNORE_RAID_IDS
+def is_unofficial_raid(raid_attendance):
+    return raid_attendance.raid_name_short in IGNORE_RAID_NAMES or raid_attendance.raid_id in IGNORE_RAID_IDS
 
 
-def add_raid(raid_attendance, override=False):
-    if raid_attendance.raid_id not in attendance_raid_ids or override:
+def add_raid(raid_attendance, override):
+    if is_unofficial_raid(raid_attendance) and not override:
+        print("Skipping Unofficial Raid: {}. ".format(raid_attendance))
+        return
+    elif raid_attendance.raid_id in attendance_raid_ids and not override:
+        print("Skipping Recorded Raid: {}.".format(raid_attendance))
+    else:
+        print("Adding New Raid: {}.".format(raid_attendance, override))
         column = get_next_column_index()
         add_raid_attendance(column, raid_attendance)
-    else:
-        print("skipping {}, already recorded".format(raid_attendance.raid_id))
 
 
-def add_raid_id(raid_id):
+def add_raid_by_id(raid_id, override=False):
     raid_attendance = LegacyRaidAttendence(raid_id)
-
-    if is_official_raid(raid_attendance):
-        print("adding {}".format(raid_id))
-        add_raid(raid_attendance)
-    else:
-        print("skipping {}, not an official raid".format(raid_id))
+    add_raid(raid_attendance, override)
 
 
-def add_all_raids():
-    for raid_id in util.get_legacy_raid_ids():
-        add_raid_id(raid_id)
-
-
-def get_raids_for_date(date):
+def add_raids_by_date(date, override=False):
     raid_attendance_list = []
     for raid_id in util.get_legacy_raid_ids():
         raid_attendance = LegacyRaidAttendence(raid_id)
         raid_date = datetime.datetime.strptime(raid_attendance.raid_date, MDY_TIMESTAMP_FORMAT)
-        if  raid_date.date() == date.date():
+        if raid_date.date() == date.date():
             raid_attendance_list.append(raid_attendance)
         elif raid_date < date:
             break
-    return raid_attendance_list
 
-def get_raids_after_date(date):
+    for raid in raid_attendance_list:
+        add_raid(raid, override)
+
+
+def add_raid_by_url(url, override=False):
+    raid_attendance = LegacyRaidAttendence(None, url)
+    add_raid(raid_attendance, override)
+
+
+def add_raids_after_date(date, override=False):
     raid_attendance_list = []
     for raid_id in util.get_legacy_raid_ids():
         raid_attendance = LegacyRaidAttendence(raid_id)
@@ -179,36 +186,85 @@ def get_raids_after_date(date):
             raid_attendance_list.append(raid_attendance)
         elif raid_date < date:
             break
-    return raid_attendance_list
 
-
-def add_raids_after_date(date):
-    raid_attendance_list = get_raids_after_date(date)
     for raid in raid_attendance_list:
-        add_raid(raid)
+        add_raid(raid, override)
 
 
-def add_raids_on_date(date):
-    raid_attendance_list = get_raids_for_date(date)
-    for raid in raid_attendance_list:
-        add_raid(raid)
+def add_all_raids(override=False):
+    for raid_id in util.get_legacy_raid_ids():
+        add_raid_by_id(raid_id, override)
 
 
-def add_raid_by_url(raid_id, url):
-    raid_attendance = LegacyRaidAttendence(raid_id,url)
-    add_raid(raid_attendance, True)
-
-
-def add_new_raids():
+def add_recent_raids():
     raid_dates = util.get_recorded_attendace_dates()
     last_raid_date = raid_dates[-1]
     add_raids_after_date(last_raid_date)
 
 
+def parse_date_string(date_str):
+    parsed_date = None
+
+    if not parsed_date:
+        try:
+            parsed_date = datetime.datetime.strptime(date_str, YMD_DATE_FORMAT)
+        except ValueError:
+            parsed_date = None
+    if not parsed_date:
+        try:
+            parsed_date = datetime.datetime.strptime(date_str, YMD_DATE_LONG_FORMAT)
+        except ValueError:
+            parsed_date = None
+
+    if not parsed_date:
+        try:
+            parsed_date = datetime.datetime.strptime(date_str, MDY_DATE_FORMAT)
+        except ValueError:
+            parsed_date = None
+    if not parsed_date:
+        try:
+            parsed_date = datetime.datetime.strptime(date_str, MDY_DATE_LONG_FORMAT)
+        except ValueError:
+            parsed_date = None
+    if not parsed_date:
+        try:
+            parsed_date = datetime.datetime.strptime(date_str, "%m/%d").replace(year=datetime.datetime.now().year)
+        except ValueError:
+            parsed_date = None
+    if not parsed_date:
+        try:
+            parsed_date = datetime.datetime.strptime(date_str, "%m-%d").replace(year=datetime.datetime.now().year)
+        except ValueError:
+            print ("ERROR: Unable to parse Date: {}".format(date_str))
+    return parsed_date
+
+
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        for arg in sys.argv[1:]:
-            date = datetime.datetime.strptime(arg, YMD_DATE_FORMAT)
-            add_raids_on_date(date)
-    else:
-        add_new_raids()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--after_date', '-a', type=str)
+    parser.add_argument('--date', '-d', type=str)
+    parser.add_argument('--id', '-i', type=str)
+    parser.add_argument('--url', '-u', type=str)
+    parser.add_argument('--force', '-f', type=bool, default=False)
+
+    args = parser.parse_args()
+
+    if args.id:
+        print("Adding Raids by Id: {}".format(args.id))
+        add_raid_by_id(args.id, args.force)
+    elif args.url:
+        print("Adding Raids by URL: {}".format(args.url))
+        add_raid_by_url(args.url, args.force)
+    elif args.date:
+        print("Adding Raids by Date: {}".format(args.date))
+        date = parse_date_string(args.date)
+        if date:
+            add_raids_by_date(date, args.force)
+    elif args.after_date:
+        print("Adding Raids On/After Date: {}".format(args.after_date))
+        date = parse_date_string(args.after_date)
+        if date:
+            add_raids_after_date(date, args.force)
+
+    print("Done")

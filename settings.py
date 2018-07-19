@@ -65,16 +65,20 @@ MDY_TIMESTAMP_ALT_FORMAT = '%m/%d/%Y %I:%M %p'
 MDY_TIMESTAMP_ALT2_FORMAT = '%m/%d/%Y %I:%M:%S %p'
 
 YMD_TIMESTAMP_FORMAT = "%y-%m-%d %H:%M:%S"
+
+YMD_DATE_LONG_FORMAT = "%Y-%m-%d"
 YMD_DATE_FORMAT = "%y-%m-%d"
-MDY_DATE_FORMAT = "%m/%d/%Y"
+MDY_DATE_LONG_FORMAT = "%m/%d/%Y"
+MDY_DATE_FORMAT = "%m/%d/%y"
 
 HYPERLINK_FUNCTION_ITEM_REGEX = '=HYPERLINK\("http://vanillawowdb.com/\?item=(.*)","(.*)"\)'
+RAID_URL_REGEX = 'https://legacyplayers.com/Raids/Viewer/\?id=(\d+).*'
 
 THUMBNAIL_FUNCTION_ITEM_FORMAT = '=IMAGE("http://vanillawowdb.com/images/icons/large/{}.png")'
 HYPERLINK_FUNCTION_ITEM_FORMAT = '=HYPERLINK("http://vanillawowdb.com/?item={}","{}")'
 HYPERLINK_FUNCTION_REALM_PLAYER_FORMAT = '=HYPERLINK("http://realmplayers.com/CharacterViewer.aspx?realm=Ely&player={}","{}")'
 
-HYPERLINK_FUNCTION_LEGACY_PLAYER_RAIDS = 'https://legacyplayers.com/Raids/?name={}exp=0'.format(quote(GUILD_NAME))
+HYPERLINK_FUNCTION_LEGACY_PLAYER_RAIDS = 'https://legacyplayers.com/Raids/?name={}&exp=0'.format(quote(GUILD_NAME))
 
 CLASSIC_DB_URL_FORMAT = "https://classicdb.ch/?item={}"
 ITEM_URL_FORMAT = 'http://vanillawowdb.com/?item={}-0'
