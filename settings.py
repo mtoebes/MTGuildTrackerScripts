@@ -17,7 +17,7 @@ ENABLE_ICONS = False
 CREDS_FILE_NAME = "creds.json"
 
 POSSESSION_SAVED_VARIABLES_FILE_PATH = Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, GUILD_BANK_ACCOUNT_NAME, "Possessions.lua"))
-MEME_TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, "MemeTracker.lua"))
+TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, "MTGuildTracker.lua"))
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']

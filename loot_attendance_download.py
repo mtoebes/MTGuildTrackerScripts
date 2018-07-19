@@ -45,24 +45,24 @@ def to_attendance_lua_entry(entry):
 
 def save_entries(loot_entries, attendance_entries):
 
-    with open(MEME_TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
+    with open(TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
         lines = file.readlines()
 
     with open('lua/build_backup.lua','w') as backup_file:
         backup_file.writelines(lines)
 
-    with open(MEME_TRACKER_SAVED_VARIABLES_FILE_PATH, 'w') as file:
-        file.write("\nMemeTrackerDB = {")
+    with open(TRACKER_SAVED_VARIABLES_FILE_PATH, 'w') as file:
+        file.write("\nMTGuildTrackerDB = {")
         for key, entry in loot_entries.items():
             file.write(to_loot_lua_entry(entry))
         file.write("\n}")
 
-        file.write("\nMemeTracker_Attendance = {")
+        file.write("\nMTGuildTracker_Attendance = {")
         for entry in attendance_entries:
             file.write(to_attendance_lua_entry(entry))
         file.write("\n}")
 
-        file.write("\nMemeTracker_LastUpdate = {")
+        file.write("\nMTGuildTracker_LastUpdate = {")
         file.write('\n\t["time_stamp"] = "{}"'.format( datetime.datetime.now().strftime(YMD_TIMESTAMP_FORMAT)))
         file.write("\n}")
 

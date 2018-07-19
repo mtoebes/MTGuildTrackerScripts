@@ -2,11 +2,11 @@ import util
 from settings import *
 import re
 
-MEME_TRACKER_DB_START_PATTERN = """MemeTrackerDB = {"""
+TRACKER_DB_START_PATTERN = """MTGuildTrackerDB = {"""
 LOOT_HISTORY_START_PATTERN = """.*\["(?P<entry_key>.*)"] = {"""
 LOOT_HISTORY_FIELD_PATTERN = """.*\["(?P<name>.*)"] = "(?P<value>.*)","""
 LOOT_HISTORY_END_PATERN = """.*},"""
-MEME_TRACKER_DB_END_PATTERN = """}"""
+TRACKER_DB_END_PATTERN = """}"""
 
 RECORD_FORMAT = '{date}\t\t{raid_name}\t{time_stamp}\t=IMAGE("http://vanillawowdb.com/images/icons/large/{item_icon}.png")\t=HYPERLINK("http://vanillawowdb.com/?item={item_id}","{item_name}")\t{item_quality}\t=HYPERLINK("http://realmplayers.com/CharacterViewer.aspx?realm=Ely&player={player_name}","{player_name}")\t{player_class}\t{item_id}\t{entry_key}'
 
@@ -26,9 +26,9 @@ def get_entry_dict(find):
     return entry_dict
 
 
-def parse_meme_tracker_file():
+def parse_tracker_file():
 
-    with open(MEME_TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
+    with open(TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
         lines = file.readlines()
 
     with open('lua/parse_backup.lua','w') as backup_file:
@@ -41,9 +41,9 @@ def parse_meme_tracker_file():
     entry_dict = {}
 
     for line in lines:
-        if re.match(MEME_TRACKER_DB_START_PATTERN, line):
+        if re.match(TRACKER_DB_START_PATTERN, line):
             found_start = True
-        elif re.match(MEME_TRACKER_DB_END_PATTERN, line) and found_start:
+        elif re.match(TRACKER_DB_END_PATTERN, line) and found_start:
             found_end = True
         elif found_start and not found_end:
             if re.match(LOOT_HISTORY_START_PATTERN, line):
@@ -88,7 +88,7 @@ def get_new_entries():
     loot_history_entries = util.get_loot_history_entries(True)
 
     index = len(raid_loot_sheet.col_values(1))
-    file_entries = parse_meme_tracker_file()
+    file_entries = parse_tracker_file()
 
     new_entries = []
 
