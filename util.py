@@ -72,7 +72,7 @@ def chunks(l, n):
 def get_loot_history_entries(include_unofficial=False):
     loot_sheet_values = raid_loot_sheet.get_all_values()
 
-    cell_list = raid_loot_sheet.range(2, 1, len(loot_sheet_values), 12)
+    cell_list = raid_loot_sheet.range(1, 1, len(loot_sheet_values), 12)[12:]
     entries = {}
     index = 0
     for chunk in chunks(cell_list, 12):

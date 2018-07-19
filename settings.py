@@ -1,23 +1,36 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime
+from urllib.parse import quote
+from pathlib import Path
 
-today = datetime.datetime.now()
+### User specific values that must be set ###
+
+GUILD_NAME = 'guild name'
+USER_ACCOUNT_NAME = 'my_account'
+GUILD_BANK_ACCOUNT_NAME = 'bank_account'
+WORLD_OF_WARCRAFT_DIR = "E:\Games\World of Warcraft 1.12"
+ENABLE_ICONS = False
+
+### DO NOT EDIT VALUES BELOW THIS POINT ###
+
+CREDS_FILE_NAME = "creds.json"
+
+POSSESSION_SAVED_VARIABLES_FILE_PATH = Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, GUILD_BANK_ACCOUNT_NAME, "Possessions.lua"))
+MEME_TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, "MemeTracker.lua"))
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('creds.json', scope)
+
+creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE_NAME, scope)
 
 client = gspread.authorize(creds)
 
-guild_bank_sheet = client.open("Guild Tracker").get_worksheet(0)
-raid_loot_sheet = client.open("Guild Tracker").get_worksheet(2)
-raid_attendance_sheet = client.open("Guild Tracker").get_worksheet(3)
+GOOGLE_SHEET_NAME = "{} Guild Tracker".format(GUILD_NAME)
 
-SAVED_VARIABLES_FILE_PATH = 'E:\Games\World of Warcraft 1.12\WTF\Account\{}\SavedVariables\{}'
-
-POSSESSION_SAVED_VARIABLES_FILE_PATH = SAVED_VARIABLES_FILE_PATH.format("BANKOFMEMES", "Possessions.lua")
-MEME_TRACKER_SAVED_VARIABLES_FILE_PATH = SAVED_VARIABLES_FILE_PATH.format("MTOEBES", "MemeTracker.lua")
+guild_bank_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(0)
+raid_loot_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(2)
+raid_attendance_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(3)
 
 THUMBNAIL_FUNCTION_FORMAT = '=IMAGE("{}")'
 HYPERLINK_FUNCTION_FORMAT = '=HYPERLINK("{}","{}")'
@@ -57,12 +70,11 @@ MDY_DATE_FORMAT = "%m/%d/%Y"
 
 HYPERLINK_FUNCTION_ITEM_REGEX = '=HYPERLINK\("http://vanillawowdb.com/\?item=(.*)","(.*)"\)'
 
-
 THUMBNAIL_FUNCTION_ITEM_FORMAT = '=IMAGE("http://vanillawowdb.com/images/icons/large/{}.png")'
 HYPERLINK_FUNCTION_ITEM_FORMAT = '=HYPERLINK("http://vanillawowdb.com/?item={}","{}")'
 HYPERLINK_FUNCTION_REALM_PLAYER_FORMAT = '=HYPERLINK("http://realmplayers.com/CharacterViewer.aspx?realm=Ely&player={}","{}")'
 
-HYPERLINK_FUNCTION_LEGACY_PLAYER_RAIDS = 'https://legacyplayers.com/Raids/?name=meme%20team&exp=0'
+HYPERLINK_FUNCTION_LEGACY_PLAYER_RAIDS = 'https://legacyplayers.com/Raids/?name={}exp=0'.format(quote(GUILD_NAME))
 
 CLASSIC_DB_URL_FORMAT = "https://classicdb.ch/?item={}"
 ITEM_URL_FORMAT = 'http://vanillawowdb.com/?item={}-0'

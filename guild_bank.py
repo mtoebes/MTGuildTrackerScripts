@@ -85,7 +85,6 @@ def read_gold():
         total_money = 0
         for match in re.finditer('\["money"\] = (?P<money>.*),', data):
             total_money += int(match.group("money"))
-            print(total_money)
         copper = int(str(total_money)[-2:]) if len(str(total_money)) >= 1 else 0
         silver = int(str(total_money)[-4:-2]) if len(str(total_money)) >= 3 else 0
         gold =  int(str(total_money)[0:-4]) if len(str(total_money)) >= 5 else 0
@@ -104,7 +103,7 @@ def build_row(item):
     else:
         name = HYPERLINK_FUNCTION_ITEM_FORMAT.format(item["id"], item["name"])
     return [item["count"],
-            THUMBNAIL_FUNCTION_ITEM_FORMAT.format(item["icon"]),
+            THUMBNAIL_FUNCTION_ITEM_FORMAT.format(item["icon"]) if ENABLE_ICONS else "",
             name,
             item["rarity"],
             classtype]
@@ -121,6 +120,7 @@ def set_header():
 
 
 def set_date_header():
+    today = datetime.datetime.now()
     date_string = today.strftime(MDY_TIMESTAMP_FORMAT)
     guild_bank_sheet.update_acell('C1', 'Last Updated = {}'.format(date_string))
 
