@@ -4,6 +4,8 @@ import re
 from global_settings import *
 import util
 import argparse
+import functools
+import operator
 
 # Run this script to upload attendance data from legacy players into google sheets.
 # You can upload raids by specifying a raid id, date, or url.
@@ -16,6 +18,7 @@ ROW_OFFSET = 10
 attendance_players = util.get_recorded_attendance_players()
 attendance_raid_ids = util.get_recorded_attendance_raid_ids()
 
+skip_player_list = []
 
 class LegacyRaidAttendence():
 
@@ -106,22 +109,42 @@ def add_new_player(player_index, player_name, player_class):
 
     raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
+def add_new_players(new_players):
+    player_index = len(attendance_players)
+    row = player_index + ROW_OFFSET + 1
+    cell_list = raid_attendance_sheet.range(row, 1, row + len(new_players), 2)
+
+    for index, new_player in enumerate(new_players):
+        cell_list[2*index].value = new_player[0]
+        cell_list[2*index+1].value = new_player[1]
+        attendance_players.append(new_player[0])
+
+    raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
+
 
 def add_raid_attendance(raid_column, raid_attendance):
     mark_row_list = []
+
+    new_players = []
+
     for player in raid_attendance.players:
         player_name = player[0]
 
         player_index = get_attendance_player_row(player_name)
 
         if player_index is None:
-            player_guild = get_player_guild(player_name)
-            if player_guild == GUILD_NAME:
-                player_index = len(attendance_players)
-                add_new_player(player_index, player_name, player[1])
-            else:
-                print("Skipping attendance for {} from guild {}".format(player_name, player_guild))
+            if player_name not in skip_player_list:
+                player_guild = get_player_guild(player_name)
+                if player_guild != GUILD_NAME:
+                    skip_player_list.append(player_name)
+                    print("Skipping attendance for {} from [{}]".format(player_name, player_guild))
+                else:
+                    player_index = len(attendance_players) + len(new_players)
+                    new_players.append((player_name, player[1]))
+
         mark_row_list.append(player_index)
+
+    add_new_players(new_players)
 
     cell_list = raid_attendance_sheet.range(1, raid_column, len(attendance_players) + ROW_OFFSET, raid_column)
 
@@ -196,7 +219,13 @@ def add_raids_after_date(date, override=False):
         elif raid_date < date:
             break
 
-    for raid in raid_attendance_list:
+    def item_comp(a, b=None):
+        return a.raid_date < b.raid_date
+
+    def item_comp2(a, b=None):
+        return a.raid_date > b.raid_date
+
+    for raid in sorted(raid_attendance_list, key=operator.attrgetter('raid_date')):
         add_raid(raid, override)
 
 
@@ -211,7 +240,9 @@ def add_recent_raids():
     raid_dates = util.get_recorded_attendance_dates()
     if len(raid_dates) > 0:
         last_raid_date = raid_dates[-1]
-        add_raids_after_date(last_raid_date)
+    else:
+        last_raid_date = datetime.datetime.strptime("18-01-01", YMD_DATE_FORMAT)
+    add_raids_after_date(last_raid_date)
 
     print("Finished uploading Attendance history")
 

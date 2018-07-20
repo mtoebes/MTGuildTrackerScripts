@@ -46,6 +46,9 @@ def to_attendance_lua_entry(entry):
 
 def save_entries(loot_entries, attendance_entries):
 
+    filename = Path(TRACKER_SAVED_VARIABLES_FILE_PATH)
+    filename.touch(exist_ok=True)
+
     with open(TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
         lines = file.readlines()
 
