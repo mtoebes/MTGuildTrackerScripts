@@ -255,5 +255,11 @@ if __name__ == "__main__":
         date = parse_date_string(args.after_date)
         if date:
             add_raids_after_date(date, args.force)
+    else:
+        raid_dates = util.get_recorded_attendance_dates()
+        if len(raid_dates) > 0:
+            last_raid_date = raid_dates[-1]
+            print("Uploading raids since most recent raid date: {} (Older dates will take longer to upload)".format(last_raid_date, args.force))
+            add_raids_after_date(last_raid_date)
 
     print("Finished uploading attendance history")
