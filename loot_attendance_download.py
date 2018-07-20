@@ -24,10 +24,9 @@ ATTENDANCE_ENTRY_FORMAT = """
     ["{player_name}"] = {{
         ["player_name"] = "{player_name}",
         ["player_class"] = "{player_class}",
-        ["to_date"] = "{to_date}",
-        ["last_5"] = "{last_5}",
         ["last_2_weeks"] = "{last_2_weeks}",
         ["last_4_weeks"] = "{last_4_weeks}",
+        ["last_8_weeks"] = "{last_8_weeks}",
     }},"""
 
 
@@ -72,19 +71,17 @@ def save_entries(loot_entries, attendance_entries):
 def get_attendance_entries():
     loot_sheet_values = raid_attendance_sheet.get_all_values()
 
-    cell_list = raid_attendance_sheet.range(8, 1, len(loot_sheet_values), 6)
+    cell_list = raid_attendance_sheet.range(8, 1, len(loot_sheet_values), 5)
 
     entries = []
-    for chunk in chunks(cell_list, 6):
+    for chunk in chunks(cell_list, 5):
         if len(chunk[0].value) > 0:
             entries.append({
                 "player_name": chunk[0].value,
                 "player_class": chunk[1].value,
-                "to_date": chunk[2].value[:-1],
+                "last_8_weeks": chunk[2].value[:-1],
                 "last_4_weeks": chunk[3].value[:-1],
                 "last_2_weeks": chunk[4].value[:-1],
-                "last_5": chunk[5].value[:-1],
-
             })
 
     return entries
