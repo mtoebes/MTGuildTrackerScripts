@@ -68,6 +68,8 @@ HYPERLINK_FUNCTION_ITEM_FORMAT = '=HYPERLINK("http://vanillawowdb.com/?item={}",
 
 HYPERLINK_FUNCTION_LEGACY_PLAYER_RAIDS = 'https://legacyplayers.com/Raids/?name={}&exp=0'.format(quote(GUILD_NAME))
 
+PLAYER_SEARCH_URL_FORMAT = "https://legacyplayers.com/Search/?search={}"
+
 CLASSIC_DB_URL_FORMAT = "https://classicdb.ch/?item={}"
 ITEM_URL_FORMAT = 'http://vanillawowdb.com/?item={}-0'
 RAID_URL_FORMAT = 'https://legacyplayers.com/Raids/Viewer/?id={}'

@@ -16,6 +16,7 @@ TRACKER_SAVED_VARIABLES_FILE_NAME = 'MTGuildTracker.lua'
 ### LegacyPlayer Settings ###
 GUILD_NAME = 'my_guild_name' #TODO UPDATE PRIOR TO USE
 
+GUILD_REALM = 'Lightbringer'
 
 ### Google Sheet Settings ###
 
