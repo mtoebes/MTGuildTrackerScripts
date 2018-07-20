@@ -61,7 +61,7 @@ def parse_tracker_file():
 
 def add_entry(index, entry, dryrun=False):
 
-    print("add_entry {} {}".format(index, entry))
+    #print("add_entry {} {}".format(index, entry))
     if not dryrun:
         cell_list = raid_loot_sheet.range(index+1, 1, index+1, 12)
         cell_list[0].value = entry['date']
@@ -80,12 +80,13 @@ def add_entry(index, entry, dryrun=False):
 
 
 def update_entry(index, entry):
+    #TODO?
     #print("update_entry {} {}".format(index, entry))
     return
 
 
 def get_new_entries():
-    loot_history_entries = util.get_loot_history_entries(True)
+    loot_history_entries = util.get_loot_history_entries()
 
     index = len(raid_loot_sheet.col_values(1))
     file_entries = parse_tracker_file()
@@ -99,7 +100,6 @@ def get_new_entries():
         if loot_history_entry:
             update_entry(loot_history_entry['index'], entry_dict)
         else:
-            print(index)
             add_entry(index, entry_dict)
             index += 1
 

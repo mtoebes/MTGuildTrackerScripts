@@ -124,12 +124,8 @@ def add_raid_attendance(raid_column, raid_attendance):
     raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
 
-def is_unofficial_raid(raid_attendance):
-    return raid_attendance.raid_name_short in IGNORE_RAID_NAMES or raid_attendance.raid_id in IGNORE_RAID_IDS
-
-
 def add_raid(raid_attendance, override):
-    if is_unofficial_raid(raid_attendance) and not override:
+    if not util.is_official_raid(raid_attendance.raid_name_short, raid_attendance.raid_id) and not override:
         print("Skipping Unofficial Raid: {}. ".format(raid_attendance))
         return
     elif raid_attendance.raid_id in attendance_raid_ids and not override:

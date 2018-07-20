@@ -69,40 +69,6 @@ def save_entries(loot_entries, attendance_entries):
         file.write("\n}")
 
 
-def get_loot_entries():
-
-
-    recorded_dates = util.get_recorded_loot_dates()
-    loot_sheet_values = raid_loot_sheet.get_all_values()
-
-    cell_list = raid_loot_sheet.range(2, 1, len(loot_sheet_values), 12)
-    entries = []
-    for chunk in chunks(cell_list, 12):
-
-        if len(chunk[0].value) == 0:
-            continue
-        raid_id = chunk[9].value
-        raid_date = datetime.datetime.strptime(chunk[7].value, MDY_TIMESTAMP_FORMAT)
-        raid_name = chunk[1].value
-        print("{} {}".format(raid_date, util.is_official_raid(raid_date, raid_name)))
-
-        if util.is_official_raid(raid_date, raid_name):
-            entries.append({
-            "date": chunk[0].value,
-            "raid_name": chunk[1].value,
-            "player_name": chunk[2].value,
-            "player_class": chunk[3].value,
-            "item_name": chunk[5].value,
-            "use_case":  chunk[6].value,
-            "time_stamp": chunk[7].value,
-            "item_quality": chunk[8].value,
-            "item_id": chunk[9].value,
-            "raid_id": chunk[10].value,
-            "entry_key": chunk[11].value,
-        })
-    return entries
-
-
 def get_attendance_entries():
     loot_sheet_values = raid_attendance_sheet.get_all_values()
 
@@ -126,7 +92,7 @@ def get_attendance_entries():
 
 def run():
     print("Warning: You need to be logged out of account {} before running this".format(USER_ACCOUNT_NAME))
-    loot_entries = util.get_loot_history_entries(True)
+    loot_entries = util.get_loot_history_entries()
     attendance_entries = get_attendance_entries()
     save_entries(loot_entries, attendance_entries)
 
