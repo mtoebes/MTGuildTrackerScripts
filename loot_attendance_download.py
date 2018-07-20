@@ -91,10 +91,12 @@ def get_attendance_entries():
 
 
 def run():
+    print("Begin downloading loot history and raid attendance from the Google Sheet into the tracker saved variables file")
     print("Warning: You need to be logged out of account {} before running this".format(USER_ACCOUNT_NAME))
     loot_entries = util.get_loot_history_entries()
     attendance_entries = get_attendance_entries()
     save_entries(loot_entries, attendance_entries)
+    print("Finished downloading loot history and raid attendance")
 
 
 if __name__ == "__main__":

@@ -180,10 +180,14 @@ def add_all_raids(override=False):
 
 
 def add_recent_raids():
-    raid_dates = util.get_recorded_attendace_dates()
+    print("Begin uploading attendance history from legacyplayers into the Google Sheet")
+
+    raid_dates = util.get_recorded_attendance_dates()
     if len(raid_dates) > 0:
         last_raid_date = raid_dates[-1]
         add_raids_after_date(last_raid_date)
+
+    print("Finished uploading Attendance history")
 
 
 def parse_date_string(date_str):
@@ -224,6 +228,7 @@ def parse_date_string(date_str):
 
 
 if __name__ == "__main__":
+    print("Begin uploading attendance history from legacyplayers into the Google Sheet")
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--after_date', '-a', type=str)
@@ -235,20 +240,20 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.id:
-        print("Uploading Raids by Id: {}".format(args.id))
+        print("Uploading raids by ID: {}".format(args.id))
         add_raid_by_id(args.id, args.force)
     elif args.url:
-        print("Uploading Raids by URL: {}".format(args.url))
+        print("Uploading raids by URL: {}".format(args.url))
         add_raid_by_url(args.url, args.force)
     elif args.date:
-        print("Uploading Raids by Date: {} (Older dates will take longer to upload)".format(args.date))
+        print("Uploading raids by date: {} (Older dates will take longer to upload)".format(args.date))
         date = parse_date_string(args.date)
         if date:
             add_raids_by_date(date, args.force)
     elif args.after_date:
-        print("Uploading Raids On/After Date: {} (Older dates will take longer to upload)".format(args.after_date))
+        print("Uploading raids on/after date: {} (Older dates will take longer to upload)".format(args.after_date))
         date = parse_date_string(args.after_date)
         if date:
             add_raids_after_date(date, args.force)
 
-    print("Uploading complete.")
+    print("Finished uploading attendance history")

@@ -148,13 +148,15 @@ def clear_sheet():
 
 
 def run():
+    print("Begin uploading bank contents from the possessions saved variables file into the Google Sheet")
     print("Warning: You need to be logged out of account {} before running this.".format(GUILD_BANK_ACCOUNT_NAME))
     list = read_file()
     clear_sheet()
     set_date_header()
     set_header()
     update_rows(list)
-    print("Done.")
+    print("Finished uploading bank contents")
+
 
 if __name__ == "__main__":
     run()

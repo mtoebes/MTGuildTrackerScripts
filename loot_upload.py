@@ -107,7 +107,9 @@ def get_new_entries():
 
 
 def run():
+    print("Begin uploading loot history from the tracker saved variables file into the Google Sheet")
     get_new_entries()
+    print("Finished uploading loot history.")
 
 
 if __name__ == "__main__":
