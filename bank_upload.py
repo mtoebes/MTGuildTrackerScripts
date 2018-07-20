@@ -2,9 +2,14 @@ from global_settings import *
 import re
 import functools
 
+# Run this script to upload the guild bank data from your possessions saved variables file into google sheet.
+# Be sure to open the bank character's mailbox and bank so that possessions can grab the latest snapshot of your inventory.
+# You must logout before running the script, otherwise you will be uploading the contents of the bank when you last logged out.
+
+# Note: be compliant with lightshope's terms of use, a shared guild bank account cannot have any characters above lvl 5.
+
 POSSESSIONS_LUA_PATTERN = r= '"(?P<name>.+)",\r?\n\t*\[2] = ".*\\\\(?P<icon>.+)",\r?\n\t*\[3] = (?P<count>.*),\r?\n\t*\[4] = (?P<rarity>.*),\r?\n\t*\[6\] = "(?P<class>.*)",\r?\n\t*\[7\] = "(?P<subclass>.*)",\r?\n\t*\[8\] = "(?P<sufix_id>.*)",\r?\n\t*\[0\] = "(?P<id>.+)",'
 
-IGNORE_BANK_ITEMS = [6948, 21544, 21543, 21539, 25, 38, 39, 40, 43, 44, 48, 5976, 5580, 2380, 2362, 6795, 1396, 57, 59, 6097]
 
 def item_comp(a, b = None):
     if a["id"] == 999999:
@@ -143,12 +148,13 @@ def clear_sheet():
 
 
 def run():
+    print("Warning: You need to be logged out of account {} before running this.".format(GUILD_BANK_ACCOUNT_NAME))
     list = read_file()
     clear_sheet()
     set_date_header()
     set_header()
     update_rows(list)
-
+    print("Done.")
 
 if __name__ == "__main__":
     run()

@@ -8,7 +8,7 @@ from user_settings import *
 ### DO NOT EDIT VALUES BELOW THIS POINT ###
 
 POSSESSION_SAVED_VARIABLES_FILE_PATH = Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, GUILD_BANK_ACCOUNT_NAME, "Possessions.lua"))
-TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, TRACKER_SAVED_VARIABLED_FILE_NAME))
+TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, TRACKER_SAVED_VARIABLES_FILE_NAME))
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
@@ -16,8 +16,6 @@ scope = ['https://spreadsheets.google.com/feeds',
 creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE_NAME, scope)
 
 client = gspread.authorize(creds)
-
-GOOGLE_SHEET_NAME = "{} Guild Tracker".format(GUILD_NAME)
 
 guild_bank_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(BANK_SHEET_INDEX)
 raid_loot_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(LOOT_SHEET_INDEX)

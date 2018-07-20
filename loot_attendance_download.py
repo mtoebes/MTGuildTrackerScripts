@@ -2,6 +2,8 @@ from global_settings import *
 import datetime
 import util
 
+# Run this script to download loot and attendance data from the google sheet into your tracker saved variables file.
+# You must logout before running the script, otherwise the file will be overwritten when you logout.
 
 LOOT_ENTRY_FORMAT = """
     ["{entry_key}"] = {{
@@ -123,6 +125,7 @@ def get_attendance_entries():
 
 
 def run():
+    print("Warning: You need to be logged out of account {} before running this".format(USER_ACCOUNT_NAME))
     loot_entries = util.get_loot_history_entries(True)
     attendance_entries = get_attendance_entries()
     save_entries(loot_entries, attendance_entries)

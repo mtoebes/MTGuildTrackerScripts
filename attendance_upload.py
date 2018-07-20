@@ -1,20 +1,17 @@
-
 import urllib.request
-
 from bs4 import BeautifulSoup
 import re
 from global_settings import *
 import util
-import sys
 import argparse
+
+# Run this script to upload attendance data from legacy players into google sheets.
+# You can upload raids by specifying a raid id, date, or url.
 
 RAID_DATE_REGEX = '\((?P<date>.+)\)'
 
 COLUMN_OFFSET = 5
 ROW_OFFSET = 10
-
-IGNORE_RAID_IDS = ['11327', '11335', '11328', '11316']
-IGNORE_RAID_NAMES = []
 
 attendance_players = util.get_recorded_attendance_players()
 attendance_raid_ids = util.get_recorded_attendance_raid_ids()
@@ -242,20 +239,20 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.id:
-        print("Adding Raids by Id: {}".format(args.id))
+        print("Uploading Raids by Id: {}".format(args.id))
         add_raid_by_id(args.id, args.force)
     elif args.url:
-        print("Adding Raids by URL: {}".format(args.url))
+        print("Uploading Raids by URL: {}".format(args.url))
         add_raid_by_url(args.url, args.force)
     elif args.date:
-        print("Adding Raids by Date: {}".format(args.date))
+        print("Uploading Raids by Date: {} (Older dates will take longer to upload)".format(args.date))
         date = parse_date_string(args.date)
         if date:
             add_raids_by_date(date, args.force)
     elif args.after_date:
-        print("Adding Raids On/After Date: {}".format(args.after_date))
+        print("Uploading Raids On/After Date: {} (Older dates will take longer to upload)".format(args.after_date))
         date = parse_date_string(args.after_date)
         if date:
             add_raids_after_date(date, args.force)
 
-    print("Done")
+    print("Uploading complete.")

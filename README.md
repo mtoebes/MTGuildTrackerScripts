@@ -5,7 +5,7 @@ this readme is WIP
 
 ### Setup Oauth2 credentionals
   1. (see out of date steps here: http://gspread.readthedocs.io/en/latest/oauth2.html)
-  1. Create a new google accoubt to use for the guild. Sign into it.
+  1. Create a new google account to use for the guild. Sign into it.
   1. Go to Google Developers Console https://console.developers.google.com/project
   1. Click "Create Project", name it "<Guild Name> Guild Tracker". Click create.  
   1. From the navigation menu, go to "API & services" -> "credentials"
@@ -13,6 +13,8 @@ this readme is WIP
       * Set the service account name to <Guild Name>CronJob
       * Set the Role to "Project" -> "Owner"
   1. Create and download the json file. Don't loss it!
+        * Rename it to "guild_name_creds.json".
+        * The name should be all lowercase and use underscores instead of spaces.
   1. From the navigation menu, go to "Dashboard", click "Enable APIS and Services"
   1. Search for and enable "Google Drive API" and "Gmail Sheets API"
 
@@ -36,3 +38,8 @@ this readme is WIP
     * run `pip install -r requirements.txt`
     * Python gurus: install to a new virtual environment
 
+
+### Adjust User Specific Variables
+
+Within the project there is a file called "user_settings.py". This should be the only file you need to alter in the project.
+Any of the lines with a "\#TODO UPDATE PRIOR TO USE"  comment need to be set before you can run all of the scripts.
