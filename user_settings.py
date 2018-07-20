@@ -5,7 +5,7 @@ USER_ACCOUNT_NAME = 'my_account'
 GUILD_BANK_ACCOUNT_NAME = 'bank_account'
 WORLD_OF_WARCRAFT_DIR = "E:\Games\World of Warcraft 1.12"
 CREDS_FILE_NAME = 'creds.json'
-
+TRACKER_SAVED_VARIABLED_FILE_NAME = 'MTGuildTracker.lua'
 ENABLE_ICONS = False
 
 BANK_SHEET_INDEX = 0

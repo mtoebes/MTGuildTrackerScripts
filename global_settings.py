@@ -8,7 +8,7 @@ from user_settings import *
 ### DO NOT EDIT VALUES BELOW THIS POINT ###
 
 POSSESSION_SAVED_VARIABLES_FILE_PATH = Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, GUILD_BANK_ACCOUNT_NAME, "Possessions.lua"))
-TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, "MTGuildTracker.lua"))
+TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, TRACKER_SAVED_VARIABLED_FILE_NAME))
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
