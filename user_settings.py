@@ -14,9 +14,10 @@ TRACKER_SAVED_VARIABLES_FILE_NAME = 'Fearless.lua'
 
 
 ### LegacyPlayer Settings ###
-GUILD_NAME = 'Fearless'
 
-GUILD_REALM = 'Lightbringer'
+GUILD_NAME = 'Fearless'
+GUILD_REALM = 'Northdale'
+
 
 ### Google Sheet Settings ###
 
