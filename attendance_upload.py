@@ -1,20 +1,17 @@
-
 import urllib.request
-
 from bs4 import BeautifulSoup
 import re
 from global_settings import *
 import util
-import sys
 import argparse
+
+# Run this script to upload attendance data from legacy players into google sheets.
+# You can upload raids by specifying a raid id, date, or url.
 
 RAID_DATE_REGEX = '\((?P<date>.+)\)'
 
 COLUMN_OFFSET = 5
 ROW_OFFSET = 10
-
-IGNORE_RAID_IDS = ['11327', '11335', '11328', '11316']
-IGNORE_RAID_NAMES = []
 
 attendance_players = util.get_recorded_attendance_players()
 attendance_raid_ids = util.get_recorded_attendance_raid_ids()
@@ -127,12 +124,8 @@ def add_raid_attendance(raid_column, raid_attendance):
     raid_attendance_sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
 
-def is_unofficial_raid(raid_attendance):
-    return raid_attendance.raid_name_short in IGNORE_RAID_NAMES or raid_attendance.raid_id in IGNORE_RAID_IDS
-
-
 def add_raid(raid_attendance, override):
-    if is_unofficial_raid(raid_attendance) and not override:
+    if not util.is_official_raid(raid_attendance.raid_name_short, raid_attendance.raid_id) and not override:
         print("Skipping Unofficial Raid: {}. ".format(raid_attendance))
         return
     elif raid_attendance.raid_id in attendance_raid_ids and not override:
@@ -187,10 +180,14 @@ def add_all_raids(override=False):
 
 
 def add_recent_raids():
-    raid_dates = util.get_recorded_attendace_dates()
+    print("Begin uploading attendance history from legacyplayers into the Google Sheet")
+
+    raid_dates = util.get_recorded_attendance_dates()
     if len(raid_dates) > 0:
         last_raid_date = raid_dates[-1]
         add_raids_after_date(last_raid_date)
+
+    print("Finished uploading Attendance history")
 
 
 def parse_date_string(date_str):
@@ -231,6 +228,7 @@ def parse_date_string(date_str):
 
 
 if __name__ == "__main__":
+    print("Begin uploading attendance history from legacyplayers into the Google Sheet")
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--after_date', '-a', type=str)
@@ -242,20 +240,26 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.id:
-        print("Adding Raids by Id: {}".format(args.id))
+        print("Uploading raids by ID: {}".format(args.id))
         add_raid_by_id(args.id, args.force)
     elif args.url:
-        print("Adding Raids by URL: {}".format(args.url))
+        print("Uploading raids by URL: {}".format(args.url))
         add_raid_by_url(args.url, args.force)
     elif args.date:
-        print("Adding Raids by Date: {}".format(args.date))
+        print("Uploading raids by date: {} (Older dates will take longer to upload)".format(args.date))
         date = parse_date_string(args.date)
         if date:
             add_raids_by_date(date, args.force)
     elif args.after_date:
-        print("Adding Raids On/After Date: {}".format(args.after_date))
+        print("Uploading raids on/after date: {} (Older dates will take longer to upload)".format(args.after_date))
         date = parse_date_string(args.after_date)
         if date:
             add_raids_after_date(date, args.force)
+    else:
+        raid_dates = util.get_recorded_attendance_dates()
+        if len(raid_dates) > 0:
+            last_raid_date = raid_dates[-1]
+            print("Uploading raids since most recent raid date: {} (Older dates will take longer to upload)".format(last_raid_date, args.force))
+            add_raids_after_date(last_raid_date)
 
-    print("Done")
+    print("Finished uploading attendance history")

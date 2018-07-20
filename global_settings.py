@@ -17,8 +17,6 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE_NAME, scope)
 
 client = gspread.authorize(creds)
 
-GOOGLE_SHEET_NAME = "{} Guild Tracker".format(GUILD_NAME)
-
 guild_bank_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(BANK_SHEET_INDEX)
 raid_loot_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(LOOT_SHEET_INDEX)
 raid_attendance_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(ATTENDANCE_SHEET_INDEX)
