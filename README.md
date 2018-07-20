@@ -7,7 +7,7 @@ this readme is WIP
   1. (see out of date steps here: http://gspread.readthedocs.io/en/latest/oauth2.html)
   1. Create a new google account to use for the guild. Sign into it.
   1. Go to Google Developers Console https://console.developers.google.com/project
-  1. Click "Create Project", name it "<Guild Name> Guild Tracker". Click create.  
+  1. Click "Create Project", name it "<Guild Name> Tracker". Click create.
   1. From the navigation menu, go to "API & services" -> "credentials"
   1. Click "Create credentials", choose "Service account key" from the dropdown menu
       * Set the service account name to <Guild Name>CronJob
@@ -20,7 +20,7 @@ this readme is WIP
 
 ### Setup the Google Sheet
   1. Make a copy of [this google sheet](https://docs.google.com/spreadsheets/d/1bWHOiqSNTIxd94vxGM6TU0JsaULuSRneZz3KpkWIayc/edit?usp=sharing),
-  1. Rename it to: *\<Guild Name\> Guild Tracker*. Do not rename or rearrange any of the sheets
+  1. Rename it to: *\<Guild Name\> Tracker*. Do not rename or rearrange any of the sheets
   1. Open up the creds.json file you downloaded for the service account, copy the "client_email" value.
   1. Share the google sheet with that client email. Give it write permissions.
 
@@ -29,7 +29,7 @@ this readme is WIP
     * [Windows instructions](https://docs.python.org/3/using/windows.html#installing-python)
     * [Mac instructions](https://docs.python.org/3/using/mac.html#installing-python)
     * Linux... If you don't know how, you probably shouldn't be on linux.
-1. Download the [Guild Tracker Scripts](https://github.com/mtoebes/Guild-Tracker-Scripts)
+1. Download the [MTGuildTrackerScripts](https://github.com/mtoebes/MTGuildTrackerScripts)
     * If you are familiar with git, clone the project instead. 
     * If you want to start using git version control (trust me, you do), follow these steps to [install github desktop](https://help.github.com/desktop/guides/getting-started-with-github-desktop/installing-github-desktop/)
 1. Optional: Download and install [PyCharm](https://www.jetbrains.com/pycharm/download). 
