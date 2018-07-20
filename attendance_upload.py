@@ -56,6 +56,29 @@ class LegacyRaidAttendence():
         return "{short_name} {date} {id}".format(id=self.raid_id, short_name=self.raid_name_short, date=date)
 
 
+def get_player_guild(player_name):
+
+    search_url = PLAYER_SEARCH_URL_FORMAT.format(player_name)
+    with urllib.request.urlopen(search_url) as response:
+        page = response.read()
+    soup = BeautifulSoup(page, 'html.parser')
+    player_table = soup.find('table', attrs={'id':'player'})
+
+    player_list = player_table.contents[3].contents
+
+    if len(player_list) <= 1:
+        return None
+
+    for row in player_list[1:-1]:
+        realm = row.contents[2].contents[0]
+
+        if realm == GUILD_REALM:
+            guild_wrapper = row.contents[1].contents[0]
+            guild = guild_wrapper.contents[0] if len(guild_wrapper) > 0 else None
+            return guild
+
+    return None
+
 def get_next_column_index():
     header_row = raid_attendance_sheet.row_values(1)
 
@@ -92,9 +115,12 @@ def add_raid_attendance(raid_column, raid_attendance):
         player_index = get_attendance_player_row(player_name)
 
         if player_index is None:
-            player_index = len(attendance_players)
-            add_new_player(player_index, player_name, player[1])
-
+            player_guild = get_player_guild(player_name)
+            if player_guild == GUILD_NAME:
+                player_index = len(attendance_players)
+                add_new_player(player_index, player_name, player[1])
+            else:
+                print("Skipping attendance for {} from guild {}".format(player_name, player_guild))
         mark_row_list.append(player_index)
 
     cell_list = raid_attendance_sheet.range(1, raid_column, len(attendance_players) + ROW_OFFSET, raid_column)
