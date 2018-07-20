@@ -118,3 +118,4 @@ lua/parse_backup.lua
 *.json
 .idea/codeStyles/Project.xml
 .idea/dbnavigator.xml
+.idea/libraries/R_User_Library.xml
