@@ -3,18 +3,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 import datetime
 from urllib.parse import quote
 from pathlib import Path
-
-### User specific values that must be set ###
-
-GUILD_NAME = 'guild name'
-USER_ACCOUNT_NAME = 'my_account'
-GUILD_BANK_ACCOUNT_NAME = 'bank_account'
-WORLD_OF_WARCRAFT_DIR = "E:\Games\World of Warcraft 1.12"
-ENABLE_ICONS = False
+from user_settings import *
 
 ### DO NOT EDIT VALUES BELOW THIS POINT ###
-
-CREDS_FILE_NAME = "creds.json"
 
 POSSESSION_SAVED_VARIABLES_FILE_PATH = Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, GUILD_BANK_ACCOUNT_NAME, "Possessions.lua"))
 TRACKER_SAVED_VARIABLES_FILE_PATH =  Path("{}/WTF/Account/{}/SavedVariables/{}".format(WORLD_OF_WARCRAFT_DIR, USER_ACCOUNT_NAME, "MTGuildTracker.lua"))
@@ -28,9 +19,9 @@ client = gspread.authorize(creds)
 
 GOOGLE_SHEET_NAME = "{} Guild Tracker".format(GUILD_NAME)
 
-guild_bank_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(0)
-raid_loot_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(2)
-raid_attendance_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(3)
+guild_bank_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(BANK_SHEET_INDEX)
+raid_loot_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(LOOT_SHEET_INDEX)
+raid_attendance_sheet = client.open(GOOGLE_SHEET_NAME).get_worksheet(ATTENDANCE_SHEET_INDEX)
 
 THUMBNAIL_FUNCTION_FORMAT = '=IMAGE("{}")'
 HYPERLINK_FUNCTION_FORMAT = '=HYPERLINK("{}","{}")'

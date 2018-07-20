@@ -1,4 +1,4 @@
-from settings import *
+from global_settings import *
 import re
 import functools
 

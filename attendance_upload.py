@@ -3,7 +3,7 @@ import urllib.request
 
 from bs4 import BeautifulSoup
 import re
-from settings import *
+from global_settings import *
 import util
 import sys
 import argparse

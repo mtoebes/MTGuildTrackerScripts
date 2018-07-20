@@ -1,5 +1,5 @@
 import util
-from settings import *
+from global_settings import *
 import re
 
 TRACKER_DB_START_PATTERN = """MTGuildTrackerDB = {"""
