@@ -47,4 +47,4 @@ Any of the lines with a "\#TODO UPDATE PRIOR TO USE"  comment need to be set bef
 
 ### Download addon Possessions
 
-(Possessions)[https://github.com/Road-block/Possessions]
+[Possessions](https://github.com/Road-block/Possessions)
