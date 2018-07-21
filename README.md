@@ -43,3 +43,8 @@ this readme is WIP
 
 Within the project there is a file called "user_settings.py". This should be the only file you need to alter in the project.
 Any of the lines with a "\#TODO UPDATE PRIOR TO USE"  comment need to be set before you can run all of the scripts.
+
+
+### Download addon Possessions
+
+(Possessions)[https://github.com/Road-block/Possessions]
