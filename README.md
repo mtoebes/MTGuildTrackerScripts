@@ -43,3 +43,13 @@ this readme is WIP
 
 Within the project there is a file called "user_settings.py". This should be the only file you need to alter in the project.
 Any of the lines with a "\#TODO UPDATE PRIOR TO USE"  comment need to be set before you can run all of the scripts.
+
+
+### Addons
+
+1. [MTGuildTracker](https://github.com/mtoebes/MTGuildTracker)
+  * Required to run loot_upload.py, loot_attendance_download.py and loot_attendance_sync.py
+  * Follow the install directions in the README
+  
+1. [Possessions](https://github.com/Road-block/Possessions) 
+  * Required to run bank_upload.py
