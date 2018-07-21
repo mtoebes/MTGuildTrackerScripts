@@ -28,6 +28,12 @@ def get_entry_dict(find):
 
 def parse_tracker_file():
 
+    filename = Path(TRACKER_SAVED_VARIABLES_FILE_PATH)
+    filename.touch(exist_ok=True)
+
+    filename = Path('lua/parse_backup.lua')
+    filename.touch(exist_ok=True)
+
     with open(TRACKER_SAVED_VARIABLES_FILE_PATH, 'r') as file:
         lines = file.readlines()
 

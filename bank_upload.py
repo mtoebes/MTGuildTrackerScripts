@@ -85,6 +85,10 @@ def read_file():
 
 
 def read_gold():
+
+    filename = Path(POSSESSION_SAVED_VARIABLES_FILE_PATH)
+    filename.touch(exist_ok=True)
+
     with open(POSSESSION_SAVED_VARIABLES_FILE_PATH) as lua_file:
         data = lua_file.read()
         total_money = 0
