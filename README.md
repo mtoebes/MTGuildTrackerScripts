@@ -45,6 +45,11 @@ Within the project there is a file called "user_settings.py". This should be the
 Any of the lines with a "\#TODO UPDATE PRIOR TO USE"  comment need to be set before you can run all of the scripts.
 
 
-### Download addon Possessions
+### Addons
 
-[Possessions](https://github.com/Road-block/Possessions)
+1. [FearlessTracker](https://github.com/mtoebes/MTGuildTracker/tree/FearlessTracker)
+  * Required to run loot_upload.py, loot_attendance_download.py and loot_attendance_sync.py
+  * Follow the install directions in the README
+  
+1. [Possessions](https://github.com/Road-block/Possessions) 
+  * Required to run bank_upload.py
