@@ -48,8 +48,8 @@ Any of the lines with a "\#TODO UPDATE PRIOR TO USE"  comment need to be set bef
 ### Addons
 
 1. [FearlessTracker](https://github.com/mtoebes/MTGuildTracker/tree/FearlessTracker)
-  * Required to run loot_upload.py, loot_attendance_download.py and loot_attendance_sync.py
-  * Follow the install directions in the README
+    * Required to run loot_upload.py, loot_attendance_download.py and loot_attendance_sync.py
+    * Follow the install directions in the README
   
 1. [Possessions](https://github.com/Road-block/Possessions) 
-  * Required to run bank_upload.py
+    * Required to run bank_upload.py
