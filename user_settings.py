@@ -10,7 +10,7 @@ GUILD_BANK_ACCOUNT_NAME = 'guild_bank_account' #TODO UPDATE PRIOR TO USE
 
 WORLD_OF_WARCRAFT_DIR = "E:\Games\World of Warcraft 1.12" #TODO UPDATE PRIOR TO USE
 CREDS_FILE_NAME = 'fearless_creds.json'
-TRACKER_SAVED_VARIABLES_FILE_NAME = 'Fearless.lua'
+TRACKER_SAVED_VARIABLES_FILE_NAME = 'FearlessTracker.lua'
 
 
 ### LegacyPlayer Settings ###
